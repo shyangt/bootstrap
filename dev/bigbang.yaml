@@ -12,7 +12,7 @@ spec:
   interval: 1m
   url: ssh://git@github.com/shyangt/bootstrap.git
   ref:
-    branch: master
+    branch: main
   secretRef:
     name: ssh-credentials
 ---
