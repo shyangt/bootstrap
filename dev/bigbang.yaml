@@ -10,9 +10,11 @@ metadata:
   namespace: bigbang
 spec:
   interval: 1m
-  url: https://repo1.dsop.io/platform-one/big-bang/customers/template.git
+  url: ssh://git@github.com/shyangt/bootstrap.git
   ref:
-    branch: main
+    branch: master
+  secretRef:
+    name: ssh-credentials
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
 kind: Kustomization
@@ -30,3 +32,20 @@ spec:
     provider: sops
     secretRef:
       name: sops-gpg
+---
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: gp2
+  annotations:
+    storageclass.kubernetes.io/is-default-class: 'true'
+provisioner: kubernetes.io/azure-disk
+parameters:
+  skuName: Standard_LRS
+  kind: Shared
+  resourceGroup: BB8
+#  encrypted: 'true' #requires kubernetes nodes have IAM rights, commented out for lab env
+#  azure_kv: 'https://sops-41c9aebbb1e54d57.vault.azure.net/keys/sops-bb8-key/1dd2a9f620d8422598b8088d5e8fb2bf'
+reclaimPolicy: Delete #recommended for lab/dev env
+allowVolumeExpansion: true
+
